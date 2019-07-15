@@ -21,4 +21,20 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.post("/", async (req, res) => {
+  const { name, budget } = req.body;
+  if (!name || !budget) {
+    res.send(400).json({
+      error: "Please include name and budget in your request."
+    });
+  } else {
+    try {
+      const newAcct = await db("accounts").insert(req.body);
+      res.status(201).json(newAcct[0]);
+    } catch (err) {
+      res.status(500).json(err.message);
+    }
+  }
+});
+
 module.exports = router;
