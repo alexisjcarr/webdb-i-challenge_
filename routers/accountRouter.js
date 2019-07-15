@@ -29,11 +29,42 @@ router.post("/", async (req, res) => {
     });
   } else {
     try {
-      const newAcct = await db("accounts").insert(req.body);
+      const newAcct = await db("accounts").insert(req.body, "id");
       res.status(201).json(newAcct[0]);
     } catch (err) {
       res.status(500).json(err.message);
     }
+  }
+});
+
+router.put("/:id", async (req, res) => {
+  const { name, budget } = req.body;
+  const { id } = req.params;
+  if (!name || !budget) {
+    res.send(400).json({
+      error: "Please include name and budget in your request."
+    });
+  } else {
+    try {
+      const count = await db("accounts")
+        .where({ id: id })
+        .update(req.body);
+      res.status(200).json({ message: `${count} account(s) updated.` });
+    } catch (err) {
+      res.status(500).json(err.message);
+    }
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const count = await db("accounts")
+      .where({ id: id })
+      .del();
+    res.status(200).json({ message: `${count} account(s) deleted.` });
+  } catch (err) {
+    res.status(500).json(err.message);
   }
 });
 
