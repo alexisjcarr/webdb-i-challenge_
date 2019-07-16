@@ -3,7 +3,7 @@ const db = require("../data/dbConfig");
 const router = require("express").Router();
 
 router.get("/", async (req, res) => {
-  const { limit = 5, sortBy = "id", sortDir = "asc" } = req.query;
+  const { limit, sortBy = "id", sortDir = "asc" } = req.query;
 
   try {
     const accts = await db("accounts")
